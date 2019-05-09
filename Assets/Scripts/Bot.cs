@@ -6,6 +6,8 @@ public class Bot : MonoBehaviour
 {
     //Twitch
     Client client;
+
+    API api;
     
     
     void Start()
@@ -18,6 +20,8 @@ public class Bot : MonoBehaviour
         client.OnMessageReceived += globalChatMessageRecieved;
         client.OnMessageSent += globalChatMessageSent;
         client.OnDisconnected += onDisconnected;
+
+        api = GetComponent<API>();
 
     }
 
@@ -70,7 +74,12 @@ public class Bot : MonoBehaviour
 
     void globalChatMessageRecieved(object sender, TwitchLib.Client.Events.OnMessageReceivedArgs e)
     {
-        Debug.Log(e.ChatMessage.Username + ": " + e.ChatMessage.Message);
+        //Debug.Log(e.ChatMessage.Username + ": " + e.ChatMessage.Message);
+
+        if (e.ChatMessage.Message.StartsWith("!KD"))
+        {
+            //TwitchMessage("Session K/D: " + api.sessionKD.ToString("0.##"));
+        }
 
     }
 

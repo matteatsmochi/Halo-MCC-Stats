@@ -6,8 +6,6 @@ public class Size : MonoBehaviour
 {
     void Start()
     {
-        Screen.SetResolution(400, 300, false, 60);
+        Screen.SetResolution(400, 250, false, 60);
     }
-
-    
 }

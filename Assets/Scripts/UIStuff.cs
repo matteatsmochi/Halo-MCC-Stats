@@ -24,14 +24,16 @@ public class UIStuff : MonoBehaviour
 
     public TMP_InputField gamertagIF;
     public TMP_InputField twitchIF;
-    public TMP_InputField emailIF;
-    public TMP_InputField passwordIF;
+    public Button cookieBTN;
+    public TMP_InputField cookieIF;
+    public Image cookieIMG;
     public Toggle botBool;
     public Button initButton;
 
     public TMP_Dropdown gameDD;
-    public RectTransform content;
 
+    public TextMeshProUGUI jsonText;
+    public Image newgameIMG;
 
     float apiWins;
     float apiLosses;
@@ -46,29 +48,7 @@ public class UIStuff : MonoBehaviour
     void Awake()
     {        
         api = GetComponent<API>();
-        
-        var values = System.Enum.GetValues(typeof(gametypes.GameType));
-        float i = 22;
-        int c = 1;
-        content.sizeDelta = new Vector2(content.sizeDelta.x, values.Length * i);
 
-        foreach (var item in values)
-        {
-            DefaultControls.Resources resources = new DefaultControls.Resources();
-            GameObject newToggle = DefaultControls.CreateToggle(resources);
-
-            newToggle.transform.SetParent(content, false);
-            //i = newToggle.transform.lossyScale.y;
-            newToggle.transform.localPosition = new Vector2(10, 5 + (c * i));
-            
-            c++;
-            
-        }
-
-        
-        Debug.Log(i);
-
-        
     }
 
     void Start()
@@ -83,15 +63,10 @@ public class UIStuff : MonoBehaviour
         else
         {twitchIF.text = PlayerPrefs.GetString("twitch");}
 
-        if (!PlayerPrefs.HasKey("email"))
-        {PlayerPrefs.SetString("email", "");}
+        if (!PlayerPrefs.HasKey("cookie"))
+        {PlayerPrefs.SetString("cookie", "");}
         else
-        {emailIF.text = PlayerPrefs.GetString("email");}
-
-        if (!PlayerPrefs.HasKey("password"))
-        {PlayerPrefs.SetString("password", "");}
-        else
-        {passwordIF.text = PlayerPrefs.GetString("password");}
+        {cookieIF.text = PlayerPrefs.GetString("cookie");}
 
         if (!PlayerPrefs.HasKey("bot"))
         {PlayerPrefs.SetInt("bot", 0);}
@@ -105,6 +80,26 @@ public class UIStuff : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    // void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.A))
+    //     {
+    //         aaa();
+    //     }
+    //     else if (Input.GetKeyDown(KeyCode.S))
+    //     {
+    //         bbb();
+    //     }
+    //     else if (Input.GetKeyDown(KeyCode.D))
+    //     {
+    //         ccc();
+    //     }
+    //     else if (Input.GetKeyDown(KeyCode.F))
+    //     {
+    //         ddd();
+    //     }
+    // }
+    
     public void UpdateGamertag()
     {
         PlayerPrefs.SetString("gamertag", gamertagIF.text);
@@ -117,16 +112,15 @@ public class UIStuff : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    public void UpdateEmail()
+    public void UpdateCookie()
     {
-        PlayerPrefs.SetString("email", emailIF.text);
+        PlayerPrefs.SetString("cookie", cookieIF.text);
         PlayerPrefs.Save();
     }
 
-    public void UpdatePassword()
+    public void OpenCookie()
     {
-        PlayerPrefs.SetString("password", passwordIF.text);
-        PlayerPrefs.Save();
+        Application.OpenURL("https://login.live.com/oauth20_authorize.srf?client_id=000000004C0BD2F1&scope=xbox.basic+xbox.offline_access&response_type=code&redirect_uri=https:%2f%2fwww.halowaypoint.com%2fauth%2fcallback&locale=en-us&display=touch&state=https%253a%252f%252fwww.halowaypoint.com%252fen-us");
     }
 
     public void UpdateBot()
@@ -143,31 +137,31 @@ public class UIStuff : MonoBehaviour
         PlayerPrefs.Save();
     }
     
-    
-
-    
-
-    
 
     public void UpdateColor(string newColor)
     {
 
     }
 
-    public void aaa ()
-    {
-        RecieveWLT(3,4,0);
-    }
+    // public void aaa ()
+    // {
+    //     RecieveWLT(3,4,0);
+    // }
 
-    public void bbb ()
-    {
-        RecieveWLT(0,4,2);
-    }
+    // public void bbb ()
+    // {
+    //     RecieveWLT(0,4,0);
+    // }
 
-    public void ccc ()
-    {
-        RecieveWLT(16,2,1);
-    }
+    // public void ccc ()
+    // {
+    //     RecieveWLT(16,2,0);
+    // }
+
+    // public void ddd ()
+    // {
+    //     RecieveWLT(69,420,0);
+    // }
     
     public void RecieveWLT(float wins, float losses, float ties)
     {
@@ -245,19 +239,19 @@ public class UIStuff : MonoBehaviour
 
     public void AddWin()
     {
-        adjustedWins += 1;
+        adjustedWins ++;
         UpdateWLT();
     }
 
     public void AddLoss()
     {
-        adjustedLosses += 1;
+        adjustedLosses ++;
         UpdateWLT();
     }
 
     public void AddTie()
     {
-        adjustedTies += 1;
+        adjustedTies ++;
         UpdateWLT();
     }
 
@@ -265,7 +259,7 @@ public class UIStuff : MonoBehaviour
     {
         if (adjustedWins > 0)
         {
-            adjustedWins -= 1;
+            adjustedWins --;
             UpdateWLT();
         }
     }
@@ -274,7 +268,7 @@ public class UIStuff : MonoBehaviour
     {
         if (adjustedLosses > 0)
         {
-            adjustedLosses -= 1;
+            adjustedLosses --;
             UpdateWLT();
         } 
     }
@@ -283,7 +277,7 @@ public class UIStuff : MonoBehaviour
     {
         if (adjustedTies > 0)
         {
-            adjustedTies -= 1;
+            adjustedTies --;
             UpdateWLT();
         }
     }
@@ -303,8 +297,7 @@ public class UIStuff : MonoBehaviour
 
     public void UpdateKD(float kd)
     {
-        averageKD = (averageKD + kd) / 2;
-        KD.text = "overall KD: " + averageKD.ToString("0.##");
+        KD.text = "overall KD: " + kd.ToString("0.##");
     }
 
 
